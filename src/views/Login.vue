@@ -192,7 +192,50 @@ const handleSendCode = async () => {
     }, 1000)
   } catch (error) {
     console.error('发送验证码失败:', error)
+    ElMessage.error('发送验证码失败，请稍后重试')
   }
+}
+
+// 处理登录成功后的跳转
+const handleLoginSuccess = (token: any) => {
+  // 处理各种可能的token格式
+  let tokenValue = ''
+  
+  if (typeof token === 'string' && token.trim() !== '') {
+    tokenValue = token
+  } else if (typeof token === 'object' && token !== null) {
+    // 如果token是对象，尝试提取可能的token字段
+    tokenValue = token.token || token.accessToken || token.data || ''
+  }
+  
+  if (!tokenValue) {
+    console.error('获取到的token为空:', token)
+    ElMessage.error('登录失败：未获取到有效令牌')
+    return
+  }
+  
+  console.log('登录成功，保存token:', tokenValue)
+  localStorage.setItem('token', tokenValue)
+  
+  // 验证token是否保存成功
+  const savedToken = localStorage.getItem('token')
+  console.log('localStorage中保存的token:', savedToken)
+  
+  if (!savedToken) {
+    ElMessage.error('令牌保存失败，请检查浏览器设置')
+    return
+  }
+  
+  ElMessage.success('登录成功')
+  
+  // 跳转到首页
+  console.log('准备跳转到首页...')
+  router.push('/shop').then(() => {
+    console.log('跳转成功')
+  }).catch((err) => {
+    console.error('跳转失败:', err)
+    ElMessage.error('页面跳转失败')
+  })
 }
 
 // 密码登录
@@ -208,19 +251,32 @@ const handlePasswordLogin = async () => {
       password: passwordForm.password
     }
     
+    console.log('密码登录参数:', params)
+    
     const res = await login(params)
     
-    if (res.success && res.data) {
-      localStorage.setItem('token', res.data)
-      ElMessage.success('登录成功')
-      router.push('/')
+    console.log('登录响应:', res)
+    
+    if (res.success) {
+      handleLoginSuccess(res.data)
+    } else {
+      ElMessage.error(res.errorMsg || '登录失败')
     }
   } catch (error: any) {
+    console.error('密码登录失败:', error)
+    
     // 处理表单验证错误
     if (error?.fields) {
       console.log('表单验证失败:', error.fields)
+      // 提取验证错误信息并显示
+      const firstError = Object.values(error.fields)[0]
+      if (firstError && Array.isArray(firstError) && firstError.length > 0) {
+        ElMessage.error(firstError[0].message || '表单验证失败')
+      }
+    } else if (error?.message) {
+      ElMessage.error(error.message)
     } else {
-      console.error('登录失败:', error)
+      ElMessage.error('登录失败，请稍后重试')
     }
   } finally {
     loading.value = false
@@ -244,12 +300,16 @@ const handleCodeLogin = async () => {
     
     const res = await login(params)
     
-    if (res.success && res.data) {
-      localStorage.setItem('token', res.data)
-      ElMessage.success('登录成功')
-      router.push('/')
+    console.log('登录响应:', res)
+    
+    if (res.success) {
+      handleLoginSuccess(res.data)
+    } else {
+      ElMessage.error(res.errorMsg || '登录失败')
     }
   } catch (error: any) {
+    console.error('验证码登录失败:', error)
+    
     // 处理表单验证错误
     if (error?.fields) {
       console.log('表单验证失败:', error.fields)
@@ -258,8 +318,10 @@ const handleCodeLogin = async () => {
       if (firstError && Array.isArray(firstError) && firstError.length > 0) {
         ElMessage.error(firstError[0].message || '表单验证失败')
       }
+    } else if (error?.message) {
+      ElMessage.error(error.message)
     } else {
-      console.error('登录失败:', error)
+      ElMessage.error('登录失败，请稍后重试')
     }
   } finally {
     loading.value = false
