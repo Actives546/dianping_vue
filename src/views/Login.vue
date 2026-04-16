@@ -208,6 +208,11 @@ const handleLoginSuccess = (token: any) => {
     tokenValue = token.token || token.accessToken || token.data || ''
   }
   
+  // 调试：如果token是数字（比如用户ID），也转换为字符串
+  if (typeof token === 'number') {
+    tokenValue = String(token)
+  }
+  
   if (!tokenValue) {
     console.error('获取到的token为空:', token)
     ElMessage.error('登录失败：未获取到有效令牌')
@@ -228,14 +233,19 @@ const handleLoginSuccess = (token: any) => {
   
   ElMessage.success('登录成功')
   
-  // 跳转到首页
-  console.log('准备跳转到首页...')
-  router.push('/shop').then(() => {
-    console.log('跳转成功')
-  }).catch((err) => {
-    console.error('跳转失败:', err)
-    ElMessage.error('页面跳转失败')
-  })
+  // 跳转到后台管理页面
+  console.log('准备跳转到后台管理页面...')
+  
+  // 使用 setTimeout 确保 localStorage 保存完成后再跳转
+  setTimeout(() => {
+    // 使用 replace 而不是 push，这样用户按返回按钮不会回到登录页
+    router.replace('/shop').then(() => {
+      console.log('跳转到后台管理页面成功')
+    }).catch((err) => {
+      console.error('跳转失败:', err)
+      ElMessage.error('页面跳转失败，请手动刷新页面')
+    })
+  }, 100)
 }
 
 // 密码登录
