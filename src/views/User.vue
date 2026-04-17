@@ -4,38 +4,38 @@
     <div class="stats-cards">
       <div class="stat-card">
         <div class="stat-icon blue">
-          <el-icon><OfficeBuilding /></el-icon>
+          <el-icon><User /></el-icon>
         </div>
         <div class="stat-info">
           <div class="stat-value">{{ pagination.total }}</div>
-          <div class="stat-label">商铺总数</div>
+          <div class="stat-label">用户总数</div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon green">
-          <el-icon><Star /></el-icon>
+          <el-icon><Check /></el-icon>
         </div>
         <div class="stat-info">
-          <div class="stat-value">{{ avgScore }}</div>
-          <div class="stat-label">平均评分</div>
+          <div class="stat-value">{{ withNickNameCount }}</div>
+          <div class="stat-label">有昵称用户</div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon orange">
-          <el-icon><TrendCharts /></el-icon>
+          <el-icon><Picture /></el-icon>
         </div>
         <div class="stat-info">
-          <div class="stat-value">{{ totalSold }}</div>
-          <div class="stat-label">总销量</div>
+          <div class="stat-value">{{ withIconCount }}</div>
+          <div class="stat-label">有头像用户</div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon purple">
-          <el-icon><ChatDotRound /></el-icon>
+          <el-icon><Document /></el-icon>
         </div>
         <div class="stat-info">
-          <div class="stat-value">{{ totalComments }}</div>
-          <div class="stat-label">总评论数</div>
+          <div class="stat-value">{{ currentPageCount }}</div>
+          <div class="stat-label">当前页数量</div>
         </div>
       </div>
     </div>
@@ -44,30 +44,24 @@
     <div class="search-section">
       <div class="search-form">
         <div class="search-item">
-          <span class="search-label">商铺名称</span>
+          <span class="search-label">手机号</span>
           <el-input
-            v-model="searchForm.name"
-            placeholder="请输入商铺名称"
+            v-model="searchForm.phone"
+            placeholder="请输入手机号"
             clearable
-            style="width: 240px"
+            style="width: 200px"
             @keyup.enter="handleSearch"
           />
         </div>
         <div class="search-item">
-          <span class="search-label">商铺类型</span>
-          <el-select
-            v-model="searchForm.typeId"
-            placeholder="请选择商铺类型"
+          <span class="search-label">昵称</span>
+          <el-input
+            v-model="searchForm.nickName"
+            placeholder="请输入昵称"
             clearable
             style="width: 200px"
-          >
-            <el-option
-              v-for="item in shopTypeList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+            @keyup.enter="handleSearch"
+          />
         </div>
         <div class="search-item">
           <el-button 
@@ -96,7 +90,7 @@
           @click="handleAdd"
         >
           <el-icon><Plus /></el-icon>
-          新增商铺
+          新增用户
         </el-button>
         <el-button 
           class="action-btn danger"
@@ -119,7 +113,7 @@
         :data="tableData"
         style="width: 100%"
         @selection-change="handleSelectionChange"
-        :row-key="(row: Shop) => row.id"
+        :row-key="(row: any) => row.id"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column type="index" label="序号" width="80">
@@ -127,60 +121,40 @@
             {{ (pagination.current - 1) * pagination.size + $index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="商铺名称" min-width="180">
+        <el-table-column prop="id" label="ID" width="100">
+          <template #default="{ row }">
+            <span style="font-weight: 600; color: #409eff">{{ row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="phone" label="手机号" width="140">
           <template #default="{ row }">
             <div style="display: flex; align-items: center; gap: 10px">
               <div 
-                v-if="row.images" 
-                style="width: 40px; height: 40px; border-radius: 8px; background: #f1f5f9; overflow: hidden; flex-shrink: 0"
+                style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #409eff 0%, #667eea 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0"
               >
-                <img 
-                  :src="row.images.split(',')[0]" 
-                  :alt="row.name"
-                  style="width: 100%; height: 100%; object-fit: cover"
-                  @error="(e: Event) => { (e.target as HTMLImageElement).style.display = 'none' }"
-                />
+                <el-icon style="color: #fff; font-size: 18px"><User /></el-icon>
               </div>
-              <div 
-                v-else
-                style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #409eff 0%, #667eea 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0"
-              >
-                <el-icon style="color: #fff; font-size: 20px"><OfficeBuilding /></el-icon>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 2px">
-                <span style="font-weight: 500; color: #1e293b">{{ row.name }}</span>
-                <span style="font-size: 12px; color: #94a3b8">{{ row.shopType?.name || '-' }}</span>
-              </div>
+              <span style="font-weight: 500; color: #1e293b">{{ row.phone }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="area" label="商圈" width="120">
+        <el-table-column prop="nickName" label="昵称" width="140">
           <template #default="{ row }">
-            <span style="color: #64748b">{{ row.area || '-' }}</span>
+            <span :class="['status-tag', row.nickName ? 'success' : 'warning']">
+              {{ row.nickName || '未设置' }}
+            </span>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="地址" min-width="180" show-overflow-tooltip>
+        <el-table-column prop="icon" label="头像" width="100">
           <template #default="{ row }">
-            <span style="color: #64748b">{{ row.address || '-' }}</span>
+            <span :class="['status-tag', row.icon ? 'success' : 'warning']">
+              {{ row.icon ? '已设置' : '未设置' }}
+            </span>
           </template>
         </el-table-column>
-        <el-table-column prop="avgPrice" label="均价" width="100">
+        <el-table-column prop="createTime" label="创建时间" min-width="180">
           <template #default="{ row }">
-            <span style="font-weight: 600; color: #f59e0b">{{ row.avgPrice ? `¥${row.avgPrice}` : '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="score" label="评分" width="120">
-          <template #default="{ row }">
-            <div v-if="row.score" style="display: flex; align-items: center; gap: 4px">
-              <el-icon style="color: #fbbf24"><Star /></el-icon>
-              <span style="font-weight: 600; color: #f59e0b">{{ (row.score / 10).toFixed(1) }}</span>
-            </div>
-            <span v-else style="color: #94a3b8">-</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="openHours" label="营业时间" width="140">
-          <template #default="{ row }">
-            <span style="color: #64748b">{{ row.openHours || '-' }}</span>
+            <span style="color: #64748b">{{ row.createTime || '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="200">
@@ -230,7 +204,7 @@
     <el-dialog
       v-model="dialogVisible"
       :title="dialogTitle"
-      width="600px"
+      width="500px"
       :close-on-click-modal="false"
     >
       <el-form
@@ -239,62 +213,27 @@
         :rules="formRules"
         label-width="100px"
       >
-        <el-form-item label="商铺名称" prop="name">
-          <el-input v-model="formData.name" placeholder="请输入商铺名称" />
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="formData.phone" placeholder="请输入手机号" />
         </el-form-item>
-        <el-form-item label="商铺类型" prop="typeId">
-          <el-select
-            v-model="formData.typeId"
-            placeholder="请选择商铺类型"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="item in shopTypeList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="商圈" prop="area">
-          <el-input v-model="formData.area" placeholder="请输入商圈，如：陆家嘴" />
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="formData.address" placeholder="请输入地址" />
-        </el-form-item>
-        <el-form-item label="均价" prop="avgPrice">
-          <el-input-number
-            v-model="formData.avgPrice"
-            :min="0"
-            placeholder="请输入均价"
-            style="width: 100%"
-          />
-        </el-form-item>
-        <el-form-item label="营业时间" prop="openHours">
-          <el-input v-model="formData.openHours" placeholder="请输入营业时间，如：10:00-22:00" />
-        </el-form-item>
-        <el-form-item label="经度" prop="x">
-          <el-input-number
-            v-model="formData.x"
-            :precision="6"
-            placeholder="请输入经度"
-            style="width: 100%"
-          />
-        </el-form-item>
-        <el-form-item label="纬度" prop="y">
-          <el-input-number
-            v-model="formData.y"
-            :precision="6"
-            placeholder="请输入纬度"
-            style="width: 100%"
-          />
-        </el-form-item>
-        <el-form-item label="图片" prop="images">
+        <el-form-item label="密码" prop="password">
           <el-input
-            v-model="formData.images"
-            type="textarea"
-            :rows="2"
-            placeholder="请输入图片URL，多个图片以逗号分隔"
+            v-model="formData.password"
+            type="password"
+            placeholder="请输入密码"
+            show-password
+          />
+          <div style="font-size: 12px; color: #94a3b8; margin-top: 4px">
+            {{ isEdit ? '留空则不修改密码' : '密码至少6位' }}
+          </div>
+        </el-form-item>
+        <el-form-item label="昵称" prop="nickName">
+          <el-input v-model="formData.nickName" placeholder="请输入昵称" />
+        </el-form-item>
+        <el-form-item label="头像" prop="icon">
+          <el-input
+            v-model="formData.icon"
+            placeholder="请输入头像URL"
           />
         </el-form-item>
       </el-form>
@@ -309,28 +248,18 @@
     <!-- 查看详情对话框 -->
     <el-dialog
       v-model="detailVisible"
-      title="商铺详情"
+      title="用户详情"
       width="500px"
     >
       <el-descriptions :column="1" border>
         <el-descriptions-item label="ID">{{ detailData.id }}</el-descriptions-item>
-        <el-descriptions-item label="商铺名称">{{ detailData.name }}</el-descriptions-item>
-        <el-descriptions-item label="商铺类型">
-          {{ detailData.shopType?.name || '-' }}
+        <el-descriptions-item label="手机号">{{ detailData.phone }}</el-descriptions-item>
+        <el-descriptions-item label="昵称">
+          {{ detailData.nickName || '-' }}
         </el-descriptions-item>
-        <el-descriptions-item label="商圈">{{ detailData.area || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="地址">{{ detailData.address || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="均价">
-          {{ detailData.avgPrice ? `¥${detailData.avgPrice}` : '-' }}
+        <el-descriptions-item label="头像">
+          {{ detailData.icon ? '已设置' : '未设置' }}
         </el-descriptions-item>
-        <el-descriptions-item label="评分">
-          {{ detailData.score ? (detailData.score / 10).toFixed(1) : '-' }}
-        </el-descriptions-item>
-        <el-descriptions-item label="销量">{{ detailData.sold || 0 }}</el-descriptions-item>
-        <el-descriptions-item label="评论数">{{ detailData.comments || 0 }}</el-descriptions-item>
-        <el-descriptions-item label="营业时间">{{ detailData.openHours || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="经度">{{ detailData.x || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="纬度">{{ detailData.y || '-' }}</el-descriptions-item>
         <el-descriptions-item label="创建时间">{{ detailData.createTime || '-' }}</el-descriptions-item>
         <el-descriptions-item label="更新时间">{{ detailData.updateTime || '-' }}</el-descriptions-item>
       </el-descriptions>
@@ -346,54 +275,48 @@ import {
   Delete, 
   Search, 
   Refresh, 
-  Star, 
-  OfficeBuilding, 
-  TrendCharts, 
-  ChatDotRound,
+  User,
+  Check,
+  Picture,
+  Document,
   View,
   Edit
 } from '@element-plus/icons-vue'
 import {
-  getShopPage,
-  addShop,
-  updateShop,
-  deleteShopById,
-  batchDeleteShop,
-  getShopById
-} from '@/api/shop'
-import { getShopTypeList } from '@/api/shopType'
-import type { Shop, ShopType } from '@/types'
+  getUserPage,
+  addUser,
+  updateUser,
+  deleteUserById,
+  batchDeleteUser,
+  getUserById
+} from '@/api/user'
+import type { User as UserData } from '@/api/user'
 
 const loading = ref(false)
 const submitLoading = ref(false)
 const dialogVisible = ref(false)
 const detailVisible = ref(false)
 const formRef = ref<FormInstance>()
-const tableData = ref<Shop[]>([])
-const shopTypeList = ref<ShopType[]>([])
+const tableData = ref<UserData[]>([])
 const selectedIds = ref<number[]>([])
-const detailData = ref<Partial<Shop>>({})
+const detailData = ref<Partial<UserData>>({})
 
 const searchForm = reactive({
-  name: '',
-  typeId: undefined as number | undefined
+  phone: '',
+  nickName: ''
 })
 
 // 统计计算属性
-const avgScore = computed(() => {
-  if (tableData.value.length === 0) return '0.0'
-  const totalScore = tableData.value.reduce((sum, item) => sum + (item.score || 0), 0)
-  const countWithScore = tableData.value.filter(item => item.score > 0).length
-  if (countWithScore === 0) return '0.0'
-  return (totalScore / countWithScore / 10).toFixed(1)
+const withNickNameCount = computed(() => {
+  return tableData.value.filter(item => item.nickName && item.nickName.trim() !== '').length
 })
 
-const totalSold = computed(() => {
-  return tableData.value.reduce((sum, item) => sum + (item.sold || 0), 0)
+const withIconCount = computed(() => {
+  return tableData.value.filter(item => item.icon && item.icon.trim() !== '').length
 })
 
-const totalComments = computed(() => {
-  return tableData.value.reduce((sum, item) => sum + (item.comments || 0), 0)
+const currentPageCount = computed(() => {
+  return tableData.value.length
 })
 
 const pagination = reactive({
@@ -407,50 +330,36 @@ const dialogTitle = ref('')
 
 const formData = reactive({
   id: undefined as number | undefined,
-  name: '',
-  typeId: undefined as number | undefined,
-  images: '',
-  area: '',
-  address: '',
-  x: undefined as number | undefined,
-  y: undefined as number | undefined,
-  avgPrice: undefined as number | undefined,
-  openHours: ''
+  phone: '',
+  password: '',
+  nickName: '',
+  icon: ''
 })
 
 const formRules: FormRules = {
-  name: [
-    { required: true, message: '请输入商铺名称', trigger: 'blur' }
+  phone: [
+    { required: true, message: '请输入手机号', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
   ]
 }
 
 const fetchData = async () => {
   loading.value = true
   try {
-    const res = await getShopPage({
+    const res = await getUserPage({
       current: pagination.current,
       size: pagination.size,
-      name: searchForm.name
+      phone: searchForm.phone || undefined,
+      nickName: searchForm.nickName || undefined
     })
     if (res.success) {
       tableData.value = res.data || []
       pagination.total = res.total || 0
     }
   } catch (error) {
-    console.error('获取商铺列表失败:', error)
+    console.error('获取用户列表失败:', error)
   } finally {
     loading.value = false
-  }
-}
-
-const fetchShopTypeList = async () => {
-  try {
-    const res = await getShopTypeList()
-    if (res.success) {
-      shopTypeList.value = res.data || []
-    }
-  } catch (error) {
-    console.error('获取商铺类型列表失败:', error)
   }
 }
 
@@ -460,100 +369,90 @@ const handleSearch = () => {
 }
 
 const handleReset = () => {
-  searchForm.name = ''
-  searchForm.typeId = undefined
+  searchForm.phone = ''
+  searchForm.nickName = ''
   handleSearch()
 }
 
-const handleSelectionChange = (selection: Shop[]) => {
+const handleSelectionChange = (selection: User[]) => {
   selectedIds.value = selection.map(item => item.id)
 }
 
 const handleAdd = () => {
   isEdit.value = false
-  dialogTitle.value = '新增商铺'
+  dialogTitle.value = '新增用户'
   resetForm()
   dialogVisible.value = true
 }
 
-const handleEdit = (row: Shop) => {
+const handleEdit = (row: UserData) => {
   isEdit.value = true
-  dialogTitle.value = '编辑商铺'
+  dialogTitle.value = '编辑用户'
   resetForm()
   
   formData.id = row.id
-  formData.name = row.name
-  formData.typeId = row.typeId
-  formData.images = row.images || ''
-  formData.area = row.area || ''
-  formData.address = row.address || ''
-  formData.x = row.x
-  formData.y = row.y
-  formData.avgPrice = row.avgPrice
-  formData.openHours = row.openHours || ''
+  formData.phone = row.phone
+  formData.password = ''
+  formData.nickName = row.nickName || ''
+  formData.icon = row.icon || ''
   
   dialogVisible.value = true
 }
 
-const handleView = async (row: Shop) => {
+const handleView = async (row: UserData) => {
   try {
-    const res = await getShopById(row.id)
+    const res = await getUserById(row.id)
     if (res.success) {
       detailData.value = res.data || {}
       detailVisible.value = true
     }
   } catch (error) {
-    console.error('获取商铺详情失败:', error)
+    console.error('获取用户详情失败:', error)
   }
 }
 
-const handleDelete = (row: Shop) => {
-  ElMessageBox.confirm(`确定要删除商铺"${row.name}"吗？`, '提示', {
+const handleDelete = (row: UserData) => {
+  ElMessageBox.confirm(`确定要删除用户"${row.phone}"吗？`, '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
     try {
-      const res = await deleteShopById(row.id)
+      const res = await deleteUserById(row.id)
       if (res.success) {
         ElMessage.success('删除成功')
         fetchData()
       }
     } catch (error) {
-      console.error('删除商铺失败:', error)
+      console.error('删除用户失败:', error)
     }
   }).catch(() => {})
 }
 
 const handleBatchDelete = () => {
-  ElMessageBox.confirm(`确定要删除选中的 ${selectedIds.value.length} 个商铺吗？`, '提示', {
+  ElMessageBox.confirm(`确定要删除选中的 ${selectedIds.value.length} 个用户吗？`, '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
     try {
-      const res = await batchDeleteShop(selectedIds.value)
+      const res = await batchDeleteUser(selectedIds.value)
       if (res.success) {
         ElMessage.success('删除成功')
         fetchData()
       }
     } catch (error) {
-      console.error('批量删除商铺失败:', error)
+      console.error('批量删除用户失败:', error)
     }
   }).catch(() => {})
 }
 
 const resetForm = () => {
   formData.id = undefined
-  formData.name = ''
-  formData.typeId = undefined
-  formData.images = ''
-  formData.area = ''
-  formData.address = ''
-  formData.x = undefined
-  formData.y = undefined
-  formData.avgPrice = undefined
-  formData.openHours = ''
+  formData.phone = ''
+  formData.password = ''
+  formData.nickName = ''
+  formData.icon = ''
   
   formRef.value?.resetFields()
 }
@@ -569,11 +468,15 @@ const handleSubmit = async () => {
           ...formData
         }
         
+        if (isEdit.value && !formData.password) {
+          delete (data as any).password
+        }
+        
         let res
         if (isEdit.value) {
-          res = await updateShop(data)
+          res = await updateUser(data)
         } else {
-          res = await addShop(data)
+          res = await addUser(data)
         }
         
         if (res.success) {
@@ -592,7 +495,6 @@ const handleSubmit = async () => {
 
 onMounted(() => {
   fetchData()
-  fetchShopTypeList()
 })
 </script>
 
@@ -827,10 +729,6 @@ onMounted(() => {
   border-bottom: 1px solid #f1f5f9;
 }
 
-:deep(.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell) {
-  background: #fafafa;
-}
-
 :deep(.el-table__row:hover > td.el-table__cell) {
   background: #f8fafc;
 }
@@ -999,20 +897,6 @@ onMounted(() => {
 .status-tag.danger {
   background: #fee2e2;
   color: #991b1b;
-}
-
-/* 加载动画 */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
 }
 
 /* 响应式 */

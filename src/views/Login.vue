@@ -387,6 +387,10 @@ const handleCodeLogin = async () => {
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
 .login-container::before {
@@ -556,15 +560,17 @@ const handleCodeLogin = async () => {
   padding: 8px 12px;
   box-shadow: 0 0 0 1px #e5e7eb;
   transition: all 0.2s ease;
+  overflow: visible;
 }
 
 :deep(.el-input__wrapper:hover) {
-  box-shadow: 0 0 0 1px #409eff;
+  box-shadow: 0 0 0 2px #409eff;
 }
 
 :deep(.el-input__wrapper.is-focus) {
-  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.3), 0 0 0 1px #409eff;
   border-color: #409eff;
+  outline: none;
 }
 
 :deep(.el-input__inner) {

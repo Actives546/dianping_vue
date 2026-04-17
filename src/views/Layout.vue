@@ -36,6 +36,17 @@
               <template #title>商铺类型</template>
             </el-menu-item>
           </el-sub-menu>
+          
+          <el-sub-menu index="user-management">
+            <template #title>
+              <el-icon><Users /></el-icon>
+              <span>用户管理</span>
+            </template>
+            <el-menu-item index="/user">
+              <el-icon><User /></el-icon>
+              <template #title>用户列表</template>
+            </el-menu-item>
+          </el-sub-menu>
         </el-menu>
       </div>
       
@@ -127,7 +138,8 @@ import {
   Bell,
   FullScreen,
   Setting,
-  SwitchButton
+  SwitchButton,
+  Users
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -140,6 +152,7 @@ const pageTitle = computed(() => {
   const titles: Record<string, string> = {
     '/shop': '商铺列表',
     '/shop-type': '商铺类型',
+    '/user': '用户列表',
     '/': '首页'
   }
   return titles[route.path] || '页面'
@@ -206,8 +219,8 @@ const handleCommand = (command: string) => {
 }
 
 .logo-icon {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   background: linear-gradient(135deg, #409eff 0%, #667eea 100%);
   border-radius: 10px;
   display: flex;
@@ -218,7 +231,7 @@ const handleCommand = (command: string) => {
 }
 
 .logo-icon .el-icon {
-  font-size: 20px;
+  font-size: 24px;
   color: #fff;
 }
 
@@ -272,31 +285,40 @@ const handleCommand = (command: string) => {
   line-height: 44px;
   margin: 4px 0;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
   transition: all 0.2s ease;
 }
 
 :deep(.el-menu-item:hover),
 :deep(.el-sub-menu__title:hover) {
-  background: rgba(64, 158, 255, 0.1) !important;
+  background: rgba(64, 158, 255, 0.15) !important;
   color: #fff !important;
 }
 
 :deep(.el-menu-item.is-active) {
-  background: linear-gradient(90deg, rgba(64, 158, 255, 0.2) 0%, rgba(64, 158, 255, 0.05) 100%) !important;
+  background: linear-gradient(90deg, rgba(64, 158, 255, 0.3) 0%, rgba(64, 158, 255, 0.1) 100%) !important;
   color: #409eff !important;
   border-right: 3px solid #409eff;
 }
 
-:deep(.el-menu-item .el-icon),
-:deep(.el-sub-menu__title .el-icon) {
-  font-size: 18px;
-  margin-right: 10px;
+:deep(.el-sub-menu .el-menu) {
+  background: rgba(0, 0, 0, 0.2) !important;
 }
 
 :deep(.el-sub-menu .el-menu-item) {
   padding-left: 52px !important;
   font-size: 13px;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+:deep(.el-sub-menu .el-menu-item:hover) {
+  color: #fff !important;
+  background: rgba(64, 158, 255, 0.2) !important;
+}
+
+:deep(.el-sub-menu .el-menu-item.is-active) {
+  color: #409eff !important;
+  background: rgba(64, 158, 255, 0.25) !important;
 }
 
 .sidebar-footer {
@@ -415,8 +437,8 @@ const handleCommand = (command: string) => {
 }
 
 .user-avatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, #409eff 0%, #667eea 100%);
   border-radius: 50%;
   display: flex;
@@ -426,7 +448,7 @@ const handleCommand = (command: string) => {
 }
 
 .user-avatar .el-icon {
-  font-size: 18px;
+  font-size: 20px;
   color: #fff;
 }
 
