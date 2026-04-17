@@ -126,7 +126,7 @@
             <span style="font-weight: 600; color: #409eff">{{ row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="phone" label="手机号" width="140">
+        <el-table-column prop="phone" label="手机号" min-width="180">
           <template #default="{ row }">
             <div style="display: flex; align-items: center; gap: 10px">
               <div 
@@ -134,13 +134,13 @@
               >
                 <el-icon style="color: #fff; font-size: 18px"><User /></el-icon>
               </div>
-              <span style="font-weight: 500; color: #1e293b">{{ row.phone }}</span>
+              <span style="font-weight: 500; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ row.phone }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="nickName" label="昵称" width="140">
+        <el-table-column prop="nickName" label="昵称" min-width="160">
           <template #default="{ row }">
-            <span :class="['status-tag', row.nickName ? 'success' : 'warning']">
+            <span :class="['status-tag', row.nickName ? 'success' : 'warning']" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%">
               {{ row.nickName || '未设置' }}
             </span>
           </template>
