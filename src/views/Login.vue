@@ -198,22 +198,52 @@ const handleSendCode = async () => {
 
 // 处理登录成功后的跳转
 const handleLoginSuccess = (token: any) => {
+  console.log('handleLoginSuccess 接收到的token参数:', token)
+  console.log('token类型:', typeof token)
+  
   // 处理各种可能的token格式
   let tokenValue = ''
   
   if (typeof token === 'string' && token.trim() !== '') {
-    tokenValue = token
+    tokenValue = token.trim()
+    console.log('token是字符串，直接使用:', tokenValue)
   } else if (typeof token === 'object' && token !== null) {
+    console.log('token是对象，尝试提取字段...')
+    console.log('对象属性:', Object.keys(token))
+    
     // 如果token是对象，尝试提取可能的token字段
     tokenValue = token.token || token.accessToken || token.data || ''
+    
+    // 如果还是空，尝试更全面的提取
+    if (!tokenValue) {
+      // 检查对象中是否有包含token的字段
+      for (const key in token) {
+        if (key.toLowerCase().includes('token') && typeof token[key] === 'string') {
+          tokenValue = token[key]
+          console.log(`从字段 ${key} 提取到token:`, tokenValue)
+          break
+        }
+      }
+    }
+    
+    console.log('从对象中提取的tokenValue:', tokenValue)
   }
   
   // 调试：如果token是数字（比如用户ID），也转换为字符串
   if (typeof token === 'number') {
     tokenValue = String(token)
+    console.log('token是数字，转换为字符串:', tokenValue)
   }
   
-  if (!tokenValue) {
+  // 清理token，移除可能的Bearer前缀
+  if (tokenValue && tokenValue.startsWith('Bearer ')) {
+    console.log('移除token中的Bearer前缀')
+    tokenValue = tokenValue.slice(7).trim()
+  }
+  
+  console.log('最终处理后的tokenValue:', tokenValue)
+  
+  if (!tokenValue || tokenValue.trim() === '') {
     console.error('获取到的token为空:', token)
     ElMessage.error('登录失败：未获取到有效令牌')
     return
