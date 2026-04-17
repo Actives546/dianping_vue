@@ -230,7 +230,7 @@ const handleCommand = (command: string) => {
 }
 
 .logo-icon .el-icon {
-  font-size: 24px;
+  font-size: 28px;
   color: #fff;
 }
 
@@ -302,7 +302,8 @@ const handleCommand = (command: string) => {
 
 :deep(.el-menu-item .el-icon),
 :deep(.el-sub-menu__title .el-icon) {
-  font-size: 20px !important;
+  font-size: 22px !important;
+  margin-right: 12px !important;
 }
 
 :deep(.el-sub-menu .el-menu) {
@@ -364,7 +365,7 @@ const handleCommand = (command: string) => {
 }
 
 .collapse-icon {
-  font-size: 20px;
+  font-size: 24px;
   color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -408,7 +409,7 @@ const handleCommand = (command: string) => {
 }
 
 .action-icon {
-  font-size: 20px;
+  font-size: 24px;
   color: #64748b;
   cursor: pointer;
   padding: 8px;
@@ -452,7 +453,7 @@ const handleCommand = (command: string) => {
 }
 
 .user-avatar .el-icon {
-  font-size: 20px;
+  font-size: 22px;
   color: #fff;
 }
 
