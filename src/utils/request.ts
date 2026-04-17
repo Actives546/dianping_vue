@@ -1,8 +1,7 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { ElMessage } from 'element-plus'
 import { Result } from '@/types'
 
-// 创建axios实例
 const service: AxiosInstance = axios.create({
   baseURL: 'http://localhost:8081',
   timeout: 10000,
@@ -11,29 +10,31 @@ const service: AxiosInstance = axios.create({
   }
 })
 
-// 请求拦截器
 service.interceptors.request.use(
-  (config) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('token')
-    console.log('请求拦截器 - 获取到的token:', token)
-    console.log('请求拦截器 - 请求URL:', config.url)
+    console.log('=== 请求拦截器 ===')
+    console.log('URL:', config.url)
+    console.log('localStorage中的token:', token)
     
     if (token && token.trim() !== '') {
       const cleanToken = token.trim()
       
       if (cleanToken.startsWith('Bearer ')) {
         config.headers['Authorization'] = cleanToken
-        console.log('请求拦截器 - token已包含Bearer前缀，直接使用:', cleanToken)
+        console.log('Token已包含Bearer前缀，直接使用')
       } else {
-        config.headers['Authorization'] = `Bearer ${cleanToken}`
-        console.log('请求拦截器 - 添加Bearer前缀:', `Bearer ${cleanToken}`)
+        config.headers['Authorization'] = `${cleanToken}`
+        console.log('添加Bearer前缀:', `Bearer ${cleanToken}`)
       }
       
-      console.log('请求拦截器 - 最终Authorization头:', config.headers['Authorization'])
+      console.log('最终Authorization头:', config.headers['Authorization'])
     } else {
-      console.log('请求拦截器 - 没有找到有效的token')
+      console.log('⚠️ 警告：没有找到有效的token！')
+      console.log('检查localStorage是否正确保存了token...')
     }
     
+    console.log('================')
     return config
   },
   (error) => {
@@ -42,36 +43,46 @@ service.interceptors.request.use(
   }
 )
 
-// 响应拦截器
 service.interceptors.response.use(
-  (response: AxiosResponse<Result>) => {
-    console.log('响应拦截器 - 成功响应:', response.config.url)
-    console.log('响应拦截器 - 响应数据:', response.data)
+  (response: AxiosResponse) => {
+    console.log('=== 响应拦截器 - 成功 ===')
+    console.log('URL:', response.config.url)
+    console.log('响应数据:', response.data)
+    console.log('================')
     
-    const res = response.data
+    const res = response.data as Result
     
     if (res.success) {
       return res
     } else {
-      console.error('响应拦截器 - 业务错误:', res.errorMsg)
+      console.error('业务错误:', res.errorMsg)
       ElMessage.error(res.errorMsg || '请求失败')
       return Promise.reject(new Error(res.errorMsg || '请求失败'))
     }
   },
   (error) => {
-    console.error('响应拦截器 - HTTP错误:', error)
+    console.error('=== 响应拦截器 - 错误 ===')
+    console.error('完整错误对象:', error)
     
     if (error.response) {
       const { status, data, config } = error.response
       
-      console.error('响应拦截器 - 错误状态码:', status)
-      console.error('响应拦截器 - 错误URL:', config?.url)
-      console.error('响应拦截器 - 错误响应数据:', data)
-      console.error('响应拦截器 - 请求头:', config?.headers)
+      console.error('❌ HTTP状态码:', status)
+      console.error('❌ 请求URL:', config?.url)
+      console.error('❌ 响应数据:', data)
+      console.error('❌ 请求头:', config?.headers)
+      
+      const currentToken = localStorage.getItem('token')
+      console.error('❌ 此时localStorage中的token:', currentToken)
       
       switch (status) {
         case 401:
-          console.error('响应拦截器 - 401未授权，准备清除token并跳转登录页')
+          console.error('❌❌❌ 401未授权 - 这是核心问题！')
+          console.error('可能的原因：')
+          console.error('1. Token没有正确发送到后端')
+          console.error('2. Token已过期或无效')
+          console.error('3. 后端JWT验证配置有问题')
+          
           ElMessage.error('登录已过期，请重新登录')
           localStorage.removeItem('token')
           window.location.href = '/login'
@@ -86,16 +97,20 @@ service.interceptors.response.use(
           ElMessage.error('服务器内部错误')
           break
         default:
-          ElMessage.error(data?.errorMsg || `请求失败: ${status}`)
+          const errorMsg = typeof data === 'object' && data !== null 
+            ? (data as any).errorMsg || `请求失败: ${status}`
+            : `请求失败: ${status}`
+          ElMessage.error(errorMsg)
       }
     } else if (error.request) {
-      console.error('响应拦截器 - 没有收到响应:', error.request)
+      console.error('没有收到响应:', error.request)
       ElMessage.error('网络错误，请检查网络连接')
     } else {
-      console.error('响应拦截器 - 请求配置错误:', error.message)
+      console.error('请求配置错误:', error.message)
       ElMessage.error(`请求失败: ${error.message}`)
     }
     
+    console.error('================')
     return Promise.reject(error)
   }
 )
