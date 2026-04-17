@@ -3,6 +3,7 @@ import Layout from '@/views/Layout.vue'
 import Login from '@/views/Login.vue'
 import Shop from '@/views/Shop.vue'
 import ShopType from '@/views/ShopType.vue'
+import User from '@/views/User.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -28,6 +29,12 @@ const routes: RouteRecordRaw[] = [
         name: 'ShopType',
         component: ShopType,
         meta: { title: '商铺类型', requiresAuth: true }
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: User,
+        meta: { title: '用户列表', requiresAuth: true }
       }
     ]
   }

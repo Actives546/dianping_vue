@@ -584,6 +584,11 @@ onMounted(() => {
   gap: 6px;
 }
 
+.search-item:last-child {
+  flex-direction: row;
+  align-items: flex-end;
+}
+
 .search-label {
   font-size: 13px;
   font-weight: 500;

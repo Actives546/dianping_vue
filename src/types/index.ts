@@ -75,6 +75,25 @@ export interface ShopTypeForm {
 
 // 用户信息
 export interface UserInfo {
+  id: number
+  phone: string
+  nickName?: string
+  icon?: string
+  createTime?: string
+  updateTime?: string
+}
+
+// 用户表单
+export interface UserForm {
+  id?: number
+  phone: string
+  password?: string
+  nickName?: string
+  icon?: string
+}
+
+// 登录响应的用户信息
+export interface LoginUserInfo {
   phone: string
   token: string
 }
