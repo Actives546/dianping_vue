@@ -514,6 +514,11 @@ const handleCodeLogin = async () => {
   padding: 30px 40px 40px;
 }
 
+:deep(.el-tabs__nav-wrap) {
+  display: flex;
+  justify-content: center;
+}
+
 :deep(.el-tabs__nav-wrap::after) {
   display: none;
 }

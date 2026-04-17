@@ -300,6 +300,11 @@ const handleCommand = (command: string) => {
   border-right: 3px solid #409eff;
 }
 
+:deep(.el-menu-item .el-icon),
+:deep(.el-sub-menu__title .el-icon) {
+  font-size: 20px !important;
+}
+
 :deep(.el-sub-menu .el-menu) {
   background: rgba(0, 0, 0, 0.2) !important;
 }
