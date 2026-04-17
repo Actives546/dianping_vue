@@ -14,14 +14,20 @@
         active-text-color="#409EFF"
         router
       >
-        <el-menu-item index="/shop">
-          <el-icon><Shop /></el-icon>
-          <template #title>商铺管理</template>
-        </el-menu-item>
-        <el-menu-item index="/shop-type">
-          <el-icon><Grid /></el-icon>
-          <template #title>商铺类型</template>
-        </el-menu-item>
+        <el-sub-menu index="shop-management">
+          <template #title>
+            <el-icon><Shop /></el-icon>
+            <span>商铺管理</span>
+          </template>
+          <el-menu-item index="/shop">
+            <el-icon><Shop /></el-icon>
+            <template #title>商铺列表</template>
+          </el-menu-item>
+          <el-menu-item index="/shop-type">
+            <el-icon><Grid /></el-icon>
+            <template #title>商铺类型</template>
+          </el-menu-item>
+        </el-sub-menu>
       </el-menu>
     </el-aside>
     
@@ -78,8 +84,8 @@ const activeMenu = computed(() => route.path)
 
 const pageTitle = computed(() => {
   const titles: Record<string, string> = {
-    '/shop': '商铺管理',
-    '/shop-type': '商铺类型管理',
+    '/shop': '商铺列表',
+    '/shop-type': '商铺类型',
     '/': '首页'
   }
   return titles[route.path] || '页面'

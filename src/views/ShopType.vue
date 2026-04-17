@@ -40,7 +40,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="id" label="ID" width="80" />
+      <el-table-column type="index" label="序号" width="80">
+        <template #default="{ $index }">
+          {{ (pagination.current - 1) * pagination.size + $index + 1 }}
+        </template>
+      </el-table-column>
       <el-table-column prop="name" label="类型名称" min-width="150" />
       <el-table-column prop="icon" label="图标" width="150">
         <template #default="{ row }">

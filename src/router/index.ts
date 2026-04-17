@@ -21,13 +21,13 @@ const routes: RouteRecordRaw[] = [
         path: 'shop',
         name: 'Shop',
         component: Shop,
-        meta: { title: '商铺管理', requiresAuth: true }
+        meta: { title: '商铺列表', requiresAuth: true }
       },
       {
         path: 'shop-type',
         name: 'ShopType',
         component: ShopType,
-        meta: { title: '商铺类型管理', requiresAuth: true }
+        meta: { title: '商铺类型', requiresAuth: true }
       }
     ]
   }
