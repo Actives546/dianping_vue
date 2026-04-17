@@ -39,7 +39,7 @@
           
           <el-sub-menu index="user-management">
             <template #title>
-              <el-icon><Users /></el-icon>
+              <el-icon><User /></el-icon>
               <span>用户管理</span>
             </template>
             <el-menu-item index="/user">
@@ -138,8 +138,7 @@ import {
   Bell,
   FullScreen,
   Setting,
-  SwitchButton,
-  Users
+  SwitchButton
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
