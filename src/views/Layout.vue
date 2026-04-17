@@ -218,10 +218,10 @@ const handleCommand = (command: string) => {
 }
 
 .logo-icon {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   background: linear-gradient(135deg, #409eff 0%, #667eea 100%);
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -230,7 +230,7 @@ const handleCommand = (command: string) => {
 }
 
 .logo-icon .el-icon {
-  font-size: 28px;
+  font-size: 34px;
   color: #fff;
 }
 
@@ -302,7 +302,7 @@ const handleCommand = (command: string) => {
 
 :deep(.el-menu-item .el-icon),
 :deep(.el-sub-menu__title .el-icon) {
-  font-size: 22px !important;
+  font-size: 28px !important;
   margin-right: 12px !important;
 }
 
@@ -365,7 +365,7 @@ const handleCommand = (command: string) => {
 }
 
 .collapse-icon {
-  font-size: 24px;
+  font-size: 30px;
   color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -409,7 +409,7 @@ const handleCommand = (command: string) => {
 }
 
 .action-icon {
-  font-size: 24px;
+  font-size: 30px;
   color: #64748b;
   cursor: pointer;
   padding: 8px;
@@ -453,7 +453,7 @@ const handleCommand = (command: string) => {
 }
 
 .user-avatar .el-icon {
-  font-size: 22px;
+  font-size: 28px;
   color: #fff;
 }
 
@@ -475,7 +475,7 @@ const handleCommand = (command: string) => {
 }
 
 .arrow-icon {
-  font-size: 12px;
+  font-size: 16px;
   color: #94a3b8;
   transition: transform 0.2s ease;
 }
@@ -503,7 +503,7 @@ const handleCommand = (command: string) => {
 }
 
 .user-dropdown :deep(.el-dropdown-item .el-icon) {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .main-content {
