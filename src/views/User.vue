@@ -374,7 +374,7 @@ const handleReset = () => {
   handleSearch()
 }
 
-const handleSelectionChange = (selection: User[]) => {
+const handleSelectionChange = (selection: UserData[]) => {
   selectedIds.value = selection.map(item => item.id)
 }
 
