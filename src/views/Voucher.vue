@@ -508,7 +508,7 @@ const formData = reactive({
   endTime: undefined as string | undefined
 })
 
-const formRules: FormRules = {
+const formRules = computed<FormRules>(() => ({
   shopId: [
     { required: true, message: '请选择关联商铺', trigger: 'change' }
   ],
@@ -522,8 +522,35 @@ const formRules: FormRules = {
   actualValue: [
     { required: true, message: '请输入抵扣金额', trigger: 'blur' },
     { type: 'number', min: 1, message: '抵扣金额必须大于0', trigger: 'blur' }
+  ],
+  stock: [
+    { 
+      required: formData.type === 1, 
+      message: '请输入库存数量', 
+      trigger: 'blur' 
+    },
+    { 
+      type: 'number' as const, 
+      min: 0, 
+      message: '库存必须大于等于0', 
+      trigger: 'blur' 
+    }
+  ],
+  beginTime: [
+    { 
+      required: formData.type === 1, 
+      message: '请选择开始时间', 
+      trigger: 'change' 
+    }
+  ],
+  endTime: [
+    { 
+      required: formData.type === 1, 
+      message: '请选择结束时间', 
+      trigger: 'change' 
+    }
   ]
-}
+}))
 
 const formatDateTime = (date: string | undefined) => {
   if (!date) return '-'
@@ -782,19 +809,19 @@ onMounted(() => {
 }
 
 .stat-icon.blue {
-  background: linear-gradient(135deg, #409eff 0%, #667eea 100%);
+  background: #409eff;
 }
 
 .stat-icon.green {
-  background: linear-gradient(135deg, #67c23a 0%, #42b883 100%);
+  background: #67c23a;
 }
 
 .stat-icon.orange {
-  background: linear-gradient(135deg, #e6a23c 0%, #f59e0b 100%);
+  background: #e6a23c;
 }
 
 .stat-icon.purple {
-  background: linear-gradient(135deg, #909399 0%, #7c3aed 100%);
+  background: #909399;
 }
 
 .stat-info {
@@ -869,15 +896,14 @@ onMounted(() => {
 }
 
 .search-btn.primary {
-  background: linear-gradient(135deg, #409eff 0%, #667eea 100%);
+  background: #409eff;
   border: none;
-  box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3);
+  color: #fff;
   transition: all 0.2s ease;
 }
 
 .search-btn.primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+  background: #66b1ff;
 }
 
 /* 操作区域 */
@@ -909,14 +935,14 @@ onMounted(() => {
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, #409eff 0%, #667eea 100%);
+  background: #409eff;
   border: none;
-  box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3);
+  color: #fff;
+  transition: all 0.2s ease;
 }
 
 .action-btn.primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+  background: #66b1ff;
 }
 
 .action-btn.danger {
@@ -1046,7 +1072,8 @@ onMounted(() => {
 }
 
 :deep(.el-pagination .el-pager li.is-active) {
-  background: linear-gradient(135deg, #409eff 0%, #667eea 100%);
+  background: #409eff;
+  color: #fff;
   border: none;
 }
 
@@ -1093,14 +1120,14 @@ onMounted(() => {
 }
 
 .dialog-btn.primary {
-  background: linear-gradient(135deg, #409eff 0%, #667eea 100%);
+  background: #409eff;
   border: none;
-  box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3);
+  color: #fff;
+  transition: all 0.2s ease;
 }
 
 .dialog-btn.primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+  background: #66b1ff;
 }
 
 /* 详情对话框 */
