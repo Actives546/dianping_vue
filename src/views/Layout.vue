@@ -35,6 +35,10 @@
               <el-icon><Grid /></el-icon>
               <template #title>商铺类型</template>
             </el-menu-item>
+            <el-menu-item index="/voucher">
+              <el-icon><Ticket /></el-icon>
+              <template #title>优惠券管理</template>
+            </el-menu-item>
           </el-sub-menu>
           
           <el-sub-menu index="user-management">
@@ -138,7 +142,8 @@ import {
   Bell,
   FullScreen,
   Setting,
-  SwitchButton
+  SwitchButton,
+  Ticket
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -152,6 +157,7 @@ const pageTitle = computed(() => {
     '/shop': '商铺列表',
     '/shop-type': '商铺类型',
     '/user': '用户列表',
+    '/voucher': '优惠券管理',
     '/': '首页'
   }
   return titles[route.path] || '页面'

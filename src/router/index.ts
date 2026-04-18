@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import Shop from '@/views/Shop.vue'
 import ShopType from '@/views/ShopType.vue'
 import User from '@/views/User.vue'
+import Voucher from '@/views/Voucher.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -35,6 +36,12 @@ const routes: RouteRecordRaw[] = [
         name: 'User',
         component: User,
         meta: { title: '用户列表', requiresAuth: true }
+      },
+      {
+        path: 'voucher',
+        name: 'Voucher',
+        component: Voucher,
+        meta: { title: '优惠券管理', requiresAuth: true }
       }
     ]
   }
