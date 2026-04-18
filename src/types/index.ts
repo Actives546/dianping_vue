@@ -97,3 +97,43 @@ export interface LoginUserInfo {
   phone: string
   token: string
 }
+
+// 优惠券
+export interface Voucher {
+  id: number
+  shopId: number
+  title: string
+  subTitle?: string
+  rules?: string
+  payValue: number
+  actualValue: number
+  type: number
+  status: number
+  stock?: number
+  beginTime?: string
+  endTime?: string
+  createTime?: string
+  updateTime?: string
+}
+
+// 优惠券表单
+export interface VoucherForm {
+  id?: number
+  shopId: number
+  title: string
+  subTitle?: string
+  rules?: string
+  payValue: number
+  actualValue: number
+  type?: number
+  status?: number
+  stock?: number
+  beginTime?: string
+  endTime?: string
+}
+
+// 优惠券分页查询参数
+export interface VoucherPageParams extends PageParams {
+  shopId?: number
+  type?: number
+}
